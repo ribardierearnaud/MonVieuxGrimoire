@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const bookRoutes = require('./routes/book');
 const userRoutes = require('./routes/user');
 
-
 mongoose.connect('mongodb+srv://arnaudribardiere:XAZ2iNu18b2yeUTw@cluster0.uqyafzw.mongodb.net/?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
@@ -76,6 +75,7 @@ app.use('/api/auth', userRoutes);
 // app.get('/api/books', (req, res, next) => {
 // const books = [
 //     {
+//         _id: 'sdfsdf',
 //         userId:'azazezae',
 //         title: 'Mémoire de fille',
 //         author: 'Annie Ernaux',
@@ -91,6 +91,7 @@ app.use('/api/auth', userRoutes);
 //         averagerating: 5,
 //     },
 //     {
+//         _id: 'sdfsdsdf',
 //         userId:'dsdsdqzde',
 //         title: 'Mon second livre',
 //         author: 'Stephan King',
