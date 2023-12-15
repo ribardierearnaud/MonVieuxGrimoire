@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const bookRoutes = require('./routes/book');
+const userRoutes = require('./routes/user');
+
 
 mongoose.connect('mongodb+srv://arnaudribardiere:XAZ2iNu18b2yeUTw@cluster0.uqyafzw.mongodb.net/?retryWrites=true&w=majority',
   { useNewUrlParser: true,
@@ -20,14 +22,15 @@ app.use((req, res, next) => {
     next();
 });
 
-app.post('/api/auth/signup', (req, res, next) => {
-    console.log(req.body);
-    res.status(201).json({
-     message:  'utilisateur créé !'
-    })
-});
+// app.post('/api/auth/signup', (req, res, next) => {
+//     console.log(req.body);
+//     res.status(201).json({
+//      message:  'utilisateur créé !'
+//     })
+// });
 
 app.use('/api/books', bookRoutes);
+app.use('/api/auth', userRoutes);
 
 // app.get('/api/auth/signup', (req, res, next) => {
 //     const signup = [
@@ -45,12 +48,12 @@ app.use('/api/books', bookRoutes);
 //     res.status(200).json(signup);
 // });
 
-app.post('/api/auth/login', (req, res, next) => {
-    console.log(req.body);
-    res.status(201).json({
-     message:  'utilisateur créé !'
-    })
-});
+// app.post('/api/auth/login', (req, res, next) => {
+//     console.log(req.body);
+//     res.status(201).json({
+//      message:  'utilisateur créé !'
+//     })
+// });
 
 // app.get('/api/auth/login', (req, res, next) => {
 //     const login = [
