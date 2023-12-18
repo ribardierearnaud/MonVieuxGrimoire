@@ -11,6 +11,8 @@ exports.signup = (req, res, next) => {
                 email: req.body.email,
                 password: hash
             });
+            console.log("user: ", user);
+
             user.save()
                 .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
                 .catch(error => res.status(400).json({ error }));
@@ -33,7 +35,7 @@ exports.login = (req, res, next) => {
                         userId: user.id,
                         token: jwt.sign(
                             {userId: user.id},
-                            'RANDOM_T0KEN_SECRET',
+                            'RANDOM_TOKEN_SECRET',
                             {expiresIn: '24h'}
                             )
                     });

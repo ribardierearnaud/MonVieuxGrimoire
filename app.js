@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 const bookRoutes = require('./routes/book');
 const userRoutes = require('./routes/user');
+const path = require('path');
 
 mongoose.connect('mongodb+srv://arnaudribardiere:XAZ2iNu18b2yeUTw@cluster0.uqyafzw.mongodb.net/?retryWrites=true&w=majority',
   { useNewUrlParser: true,
@@ -30,6 +31,7 @@ app.use((req, res, next) => {
 
 app.use('/api/books', bookRoutes);
 app.use('/api/auth', userRoutes);
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // app.get('/api/auth/signup', (req, res, next) => {
 //     const signup = [
