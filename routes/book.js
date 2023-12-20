@@ -8,8 +8,8 @@ const bookCtrl = require('../controllers/book');
 // Routes pour la gestion des livres
 router.get('/', bookCtrl.getAllBooks);
 router.post('/', auth, multer, bookCtrl.createBook);
-// router.put('/:id', auth, bookCtrl.modifyBook);
-// router.delete('/:id', auth, bookCtrl.deleteBook);
+router.put('/:id', auth, multer, bookCtrl.modifyBook);
+router.delete('/:id', auth, bookCtrl.deleteBook);
 router.get('/:id', bookCtrl.getOneBook);
 
 // Route pour obtenir les notes

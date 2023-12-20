@@ -22,95 +22,9 @@ app.use((req, res, next) => {
     next();
 });
 
-// app.post('/api/auth/signup', (req, res, next) => {
-//     console.log(req.body);
-//     res.status(201).json({
-//      message:  'utilisateur créé !'
-//     })
-// });
-
 app.use('/api/books', bookRoutes);
 app.use('/api/auth', userRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
-
-// app.get('/api/auth/signup', (req, res, next) => {
-//     const signup = [
-//         {
-//             _id: 'oeihfzeoi',
-//             email: 'admin@mvg.fr',
-//             password: 'mvg',
-//         },
-//         {
-//             _id: 'dsdsdqzde',
-//             email: 'arnaud@mvg.fr',
-//             password: 'arnaud',
-//         },
-//     ];
-//     res.status(200).json(signup);
-// });
-
-// app.post('/api/auth/login', (req, res, next) => {
-//     console.log(req.body);
-//     res.status(201).json({
-//      message:  'utilisateur créé !'
-//     })
-// });
-
-// app.get('/api/auth/login', (req, res, next) => {
-//     const login = [
-//         {
-//             _id: 'oeihfzeoi',
-//             email: 'admin@mvg.fr',
-//             password: 'mvg',
-//         },
-//         {
-//             _id: 'dsdsdqzde',
-//             email: 'arnaud@mvg.fr',
-//             password: 'arnaud',
-//         },
-//     ];
-//     res.status(200).json(login);
-// });
-
-
-
-// app.get('/api/books', (req, res, next) => {
-// const books = [
-//     {
-//         _id: 'sdfsdf',
-//         userId:'azazezae',
-//         title: 'Mémoire de fille',
-//         author: 'Annie Ernaux',
-//         imageURL: 'https://m.media-amazon.com/images/I/81lEpHhyc-L._SL800_.jpg',
-//         year: 2016,
-//         genre: 'Autobiographie',
-//         ratings: [
-//             {
-//             userId: 'dsdsdqzde',
-//             grade: 5,
-//             }
-//         ],
-//         averagerating: 5,
-//     },
-//     {
-//         _id: 'sdfsdsdf',
-//         userId:'dsdsdqzde',
-//         title: 'Mon second livre',
-//         author: 'Stephan King',
-//         imageURL: 'https://cdn.pixabay.com/photo/2019/06/11/18/56/camera-4267692_1280.jpg',
-//         year: 2023,
-//         genre: 'Heroic-Fantaise',
-//         ratings: [
-//             {
-//             userId: 'dsdsdqzde',
-//             grade: 5,
-//             }
-//         ],
-//         averagerating: 5,
-//     }
-// ];
-// res.status(200).json(books);
-// });
 
 
 module.exports = app;
