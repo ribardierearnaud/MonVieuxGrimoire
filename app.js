@@ -6,6 +6,7 @@ const userRoutes = require('./routes/user');
 const path = require('path');
 const helmet = require('helmet');
 const cors = require('cors');
+const {generalLimiter} = require('./middleware/limiter');
 
 
 
@@ -18,6 +19,8 @@ mongoose.connect('mongodb+srv://arnaudribardiere:XAZ2iNu18b2yeUTw@cluster0.uqyaf
 const app = express();
 
 // On appelle Helmet en customisant le Content-Security-Policy header pour autoriser l'affichage des images
+
+app.use(generalLimiter)
 
 app.use(
   helmet({
