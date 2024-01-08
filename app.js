@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 const bookRoutes = require('./routes/book');
 const userRoutes = require('./routes/user');
@@ -9,8 +10,8 @@ const cors = require('cors');
 const {generalLimiter} = require('./middleware/limiter');
 
 
-
-mongoose.connect('mongodb+srv://arnaudribardiere:XAZ2iNu18b2yeUTw@cluster0.uqyafzw.mongodb.net/?retryWrites=true&w=majority',
+// On se connecte à la base de données MongoDB - les paramètres sont à stocker dans le fichier .env
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PW}@${process.env.DB_HOST}/?retryWrites=true&w=majority`,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -18,10 +19,10 @@ mongoose.connect('mongodb+srv://arnaudribardiere:XAZ2iNu18b2yeUTw@cluster0.uqyaf
 
 const app = express();
 
-// On appelle Helmet en customisant le Content-Security-Policy header pour autoriser l'affichage des images
-
+// On applique une limite d'appels au backend
 app.use(generalLimiter)
 
+// On appelle Helmet en customisant le Content-Security-Policy header pour autoriser l'affichage des images
 app.use(
   helmet({
     crossOriginResourcePolicy: {policy: "cross-origin"}
@@ -29,23 +30,16 @@ app.use(
   ),
 );
 
+// On définie les URL ayant le droit d'appeler nos API
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:4000"],
+    origin: [`${process.env.FRONT_HOST}`, `${process.env.BACK_HOST}`],
   }),
 );
 
 app.use(express.json());
 
-
-
-// app.use((req, res, next) => {
-//     res.setHeader('Access-Control-Allow-Origin', '*');
-//     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-//     next();
-// });
-
+// On définit les routes de haut niveau de l'application
 app.use('/api/books', bookRoutes);
 app.use('/api/auth', userRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
