@@ -3,7 +3,7 @@ const rateLimiter = require('express-rate-limit');
 // On définit une limite pour la création de compte
 const signUpLimiter = rateLimiter({
     max: 3,
-    windowsMS: 10 * 60 * 1000,
+    windowsMS: 5 * 60 * 1000,
     message: "Trop de requêtes, merci de réessayer ultérieurement"
 })
 

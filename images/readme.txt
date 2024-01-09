@@ -1,0 +1,1 @@
+Fichier qui permet de s'assurer que le répertoire est bien présent à l'installation de l'application

@@ -1,5 +1,7 @@
 const { Timestamp } = require('mongodb');
 const multer = require('multer');
+const fs = require('fs');
+const sharp = require('sharp');
 
 // On définit sur quels types d'objets vont s'appliquer nos règles Multer
 const MIME_TYPES = {
