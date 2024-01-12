@@ -1,38 +1,59 @@
-const { Timestamp } = require('mongodb');
 const multer = require('multer');
+const sharp = require('sharp');
+const path = require('path');
+const fs = require('fs/promises');
 
+const storage = multer.memoryStorage();
 
-// On définit sur quels types d'objets vont s'appliquer nos règles Multer
-const MIME_TYPES = {
-    'image/jpg': 'jpg',
-    'image/jpeg': 'jpg',
-    'image/png': 'png',
+const filter = (req, file, cb) => {
+    if (file.mimetype.split("/")[0] === 'image') {
+        cb(null, true);
+    } else {
+        cb(new Error("Seules les images sont autorisées !"));
+    }
 };
 
-const storage = multer.diskStorage({
-    // On définit le répertoire où sont stockées les images
-    destination: (req, file, callback) => {
-        callback(null, 'images');
-    },
-    filename: (req, file, callback) => {
-        // On supprime les espaces
-        const name = file.originalname.split(' ').join('_');
-
-        // On supprime l'extension dans le nom du fichier
-        const nameWithoutExtension = name.slice(0, name.lastIndexOf('.'));
-
-        // On récupère l'extension du fichier d'origine
-        const extension = MIME_TYPES[file.mimetype];
-
-        // On ajoute un timestamp pour garantir l'unitité du fichier
-        const timestamp = Date.now();
-
-        // On prépare le nom du fichier à stocker sur le serveur
-        const finalFileName = `${nameWithoutExtension}_${timestamp}.${extension}`;
-
-        // On le restitue
-        callback(null, finalFileName);
-    }
+const imageUploader = multer({
+    storage,
+    fileFilter: filter
 });
 
-module.exports = multer({ storage }).single('image');
+const upload = imageUploader.single('image');
+
+module.exports = async (req, res, next) => {
+    upload(req, res, async (err) => {
+        if (err instanceof multer.MulterError) {
+            console.error("Multer Error:", err);
+            return res.status(400).json({ error: 'Une erreur Multer est survenue.' });
+        } else if (err) {
+            console.error("Upload Error:", err);
+            return res.status(500).json({ error: err.message || 'Une erreur est survenue lors du traitement de l\'image.' });
+        }
+
+        // Si l'upload est réussi, redimensionner l'image avec Sharp
+        if (req.file) {
+            try {
+                const resizedBuffer = await sharp(req.file.buffer).resize(600).toBuffer();
+
+                // On stocke en mémoire de l'image redimensionnée si elle est de taille inférieure à celle uploadée par l'utilisateur
+                if(req.file.buffer.length > resizedBuffer.length) {
+                    req.file.buffer = resizedBuffer;
+                }
+
+                // On stocke le fichier final sur le disque
+                const fileName = `${Date.now()}_${req.file.originalname}`;
+                const filePath = path.join('images', fileName);
+                await fs.writeFile(filePath, req.file.buffer);
+
+                req.file.filename = fileName;
+
+                next();
+            } catch (sharpError) {
+                console.error("Sharp Error:", sharpError);
+                return res.status(500).json({ error: 'Une erreur est survenue lors du redimensionnement de l\'image.' });
+            }
+        } else {
+            next();
+        }
+    });
+};

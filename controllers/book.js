@@ -5,24 +5,33 @@ const fs = require('fs');
 exports.createBook = (req, res, next) => {
     delete req.body._id;
     const bookObject = JSON.parse(req.body.book);
-    
+
+    // On récupère le nom du fichier généré lors du stockage sur le disque
+    const fileName = req.file ? req.file.filename : null;
+    const imageUrl = fileName ? `${req.protocol}://${req.get('host')}/images/${fileName}` : null;
+
     const booktoadd = new Book({
         ...bookObject,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        imageUrl: imageUrl,
     });
 
     delete booktoadd.id;
     delete booktoadd._id;
 
-    /// On force les valeurs de rating et rating moyen à null et 0
-    booktoadd.ratings=[];
-    booktoadd.averageRating=0;
+    // On force les valeurs de rating et rating moyen à null et 0
+    booktoadd.ratings = [];
+    booktoadd.averageRating = 0;
 
-
-    // On sauvegarde le livre dans la base de données mongoDB
+    // On sauvegarde le livre dans la base de données MongoDB
     booktoadd.save()
-        .then(() => res.status(201).json({ message: 'Livre ajouté' }))
-        .catch(error => res.status(400).json({ error }));
+        .then(() => {
+            console.log("Book Saved Successfully");
+            res.status(201).json({ message: 'Livre ajouté' });
+        })
+        .catch(error => {
+            console.error("Error Saving Book:", error);
+            res.status(400).json({ error });
+        });
 };
 
 // Fonction de modification d'un livre
