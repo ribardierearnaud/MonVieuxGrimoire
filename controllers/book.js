@@ -25,7 +25,6 @@ exports.createBook = (req, res, next) => {
     // On sauvegarde le livre dans la base de données MongoDB
     booktoadd.save()
         .then(() => {
-            console.log("Book Saved Successfully");
             res.status(201).json({ message: 'Livre ajouté' });
         })
         .catch(error => {
