@@ -10,6 +10,7 @@ https://github.com/OpenClassrooms-Student-Center/P7-Dev-Web-livres
 
 - [Installation](#installation)
 - [Utilisation](#utilisation)
+- [Création d'un compte utilisateur](#création-des-utilisateurs)
 
 ## Installation
 
@@ -35,3 +36,15 @@ npm start
 
 Le backend sera accessible à l'adresse [http://localhost:4000](http://localhost:4000).
 Par défaut, le frontend est lui accessible à l'adresse [http://localhost:3000](http://localhost:3000)
+
+
+## Création des utilisateurs
+
+Lors de la création d'un compte, le mot de passe doit vérifier les règles suivantes :
+ - minimum 8 caractères
+ - maximum 100 caractères
+ - doit contenir au moins une majuscule
+ - doit contenir au moins une minuscule
+ - doit avoir au moins 2 chiffres
+ - ne doit pas contenir d'espace
+ - doit être différent de 'Passw0rd' ou 'Password123'
