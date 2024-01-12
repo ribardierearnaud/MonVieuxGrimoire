@@ -23,7 +23,6 @@ npm install
 
 Pour lancer l'application, utilisez la commande suivante :
 
-```bash
 npm start
 ```
 
