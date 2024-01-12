@@ -33,4 +33,5 @@ Pour lancer l'application faites la commande :
 npm start
 ```
 
-L'application sera accessible à l'adresse [http://localhost:4000](http://localhost:4000).
+Le backend sera accessible à l'adresse [http://localhost:4000](http://localhost:4000).
+Par défaut, le frontend est lui accessible à l'adresse [http://localhost:3000](http://localhost:3000)
