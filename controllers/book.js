@@ -79,7 +79,7 @@ exports.modifyBook = (req, res, next) => {
                         const pictodelete = bookObject.imageUrl.split("/images/")[1];
                         fs.unlink(`images/${pictodelete}`, (err) => {
                             console.log(`Une erreur s'est produite, suppression de la nouvelle image : ${pictodelete}`);
-                            res.status(401).json({ error });
+                            res.status(403).json({ error });
                         });
                     });
             }
@@ -105,7 +105,7 @@ exports.deleteBook = (req, res, next) => {
                 // On supprime l'objet en base de données
                 Book.deleteOne({_id: req.params.id})
                     .then(() => { res.status(200).json({message: 'Objet supprimé !'})})
-                    .catch(error => res.status(401).json({ error }));
+                    .catch(error => res.status(403).json({ error }));
             });
         }
     })
