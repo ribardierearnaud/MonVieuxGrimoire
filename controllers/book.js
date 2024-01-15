@@ -43,7 +43,8 @@ exports.modifyBook = (req, res, next) => {
   
     // On supprime l'information transmise de l'userID pour vérifier si l'émetteur de la requête est bien l'auteur du livre
     delete bookObject._userId;
-    Book.findOne({_id: req.params.id})
+
+    Book.findOne({ _id: req.params.id })
         .then((book) => {
 
             // On vérifie si le livre existe
@@ -53,24 +54,40 @@ exports.modifyBook = (req, res, next) => {
                     
             // On vérifie si l'utilisateur est l'auteur du livre
             if (book.userId !== req.auth.id) {
-                res.status(401).json({ message : 'Non autorisé'});
+                res.status(403).json({ message: 'Action interdite' });
             } else {
 
-                // On récupère le nom du fichier de l'image précédente
-                const previousFilename = book.imageUrl.split('/images/')[1];
+                // On met à jour la base de données avec la nouvelle information
+                Book.updateOne({ _id: req.params.id }, { ...bookObject, _id: req.params.id })
+                    .then(() => {
+                        // On récupère le nom du fichier de l'image précédente
+                        const previousFilename = book.imageUrl.split('/images/')[1];
 
-                // On supprime la précédente image du serveur
-                fs.unlink(`images/${previousFilename}`, () => {
-                    Book.updateOne({ _id: req.params.id}, { ...bookObject, _id: req.params.id})
-                    .then(() => res.status(200).json({message : 'Livre modifié!'}))
-                    .catch(error => res.status(401).json({ error }));
-                } );
+                        // On supprime la précédente image du serveur
+                        fs.unlink(`images/${previousFilename}`, (err) => {
+                            if (err) {
+                                console.log(`Erreur de suppression de l'ancienne image : ${previousFilename}`);
+                                res.status(500).json({ error: "Erreur serveur lors de la suppression de l'ancienne image" });
+                            } else {
+                                res.status(200).json({ message: 'Livre modifié!' });
+                            }
+                        });
+                    })
+                    .catch((error) => {
+                        // En cas d'erreur lors de la mise à jour de la base de données,
+                        // on supprime la nouvelle image ajoutée
+                        const pictodelete = bookObject.imageUrl.split("/images/")[1];
+                        fs.unlink(`images/${pictodelete}`, (err) => {
+                            console.log(`Une erreur s'est produite, suppression de la nouvelle image : ${pictodelete}`);
+                            res.status(401).json({ error });
+                        });
+                    });
             }
         })
         .catch((error) => {
             res.status(400).json({ error });
         });
- };
+};
 
 // Fonction de suppression d'un livre
 exports.deleteBook = (req, res, next) => {
@@ -79,7 +96,7 @@ exports.deleteBook = (req, res, next) => {
 
         // On vérifie que le demandeur est bien le propriétaire du livre (celui qui l'a créé en base de données)
         if (book.userId != req.auth.id) {
-            res.status(401).json({message: 'Non autorisé'});
+            res.status(403).json({message: 'Action interdite'});
         } else {
             const filename = book.imageUrl.split('/images/')[1];
 
